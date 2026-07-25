@@ -9,9 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const nav = document.getElementById('nav');
 
     if (hamburger && nav) {
+        const header = document.querySelector('.header');
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('open');
             nav.classList.toggle('open');
+            if(header) header.classList.toggle('menu-open');
             document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
         });
 
@@ -20,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('open');
                 nav.classList.remove('open');
+                if(header) header.classList.remove('menu-open');
                 document.body.style.overflow = '';
             });
         });
