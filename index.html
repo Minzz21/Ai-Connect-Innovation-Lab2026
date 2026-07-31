@@ -39,6 +39,7 @@
                     <li><a href="proyek.html" class="nav-link">Proyek</a></li>
                     <li><a href="tentang.html" class="nav-link">Tentang</a></li>
                 </ul>
+                <a href="login.html" class="btn btn-primary nav-contact">Masuk</a>
             </nav>
         </div>
     </header>
@@ -68,47 +69,8 @@
                     Kategori <span class="underline-accent">Proyek</span>
                 </h2> -->
 
-                <div class="grid-2col">
-                    <!-- Kartu Project Apilogy -->
-                    <a href="proyek.html#apilogy" class="card card-featured fade-in" id="card-apilogy">
-                        <img 
-                            src="assets/images/apilogy.webp" 
-                            alt="Preview dashboard platform manajemen API Apilogy"
-                            class="card-thumbnail"
-                        >
-                        <div class="card-body">
-                            <div class="card-title">
-                                Apilogy Use Case
-                                <svg class="card-arrow" xmlns="http://www.w3.org/2000/s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-                                </svg>
-                            </div>
-                            <p class="card-desc">
-                                Pengembangan sistem melalui implementasi berbagai Application Programming Interface (API) dari platform Apilogy.
-                            </p>
-                        </div>
-                    </a>
-
-                    <!-- Kartu Project AI -->
-                    <a href="proyek.html#ai-perkelompok" class="card card-featured fade-in" id="card-ai">
-                        <img 
-                            src="assets/images/ai.jpg" 
-                            alt="Preview proyek kolaboratif AI berbasis data"
-                            class="card-thumbnail"
-                        >
-                        <div class="card-body">
-                            <div class="card-title">
-                                AI Innovation Lab 2026
-                                <svg class="card-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-                                </svg>
-                            </div>
-                            <p class="card-desc">
-                                Eksperimen dan implementasi 6 solusi AI kolaboratif dari prediksi permintaan 
-                                hingga deteksi anomali data.
-                            </p>
-                        </div>
-                    </a>
+                <div class="grid-2col" id="featured-grid">
+                    <p style="grid-column: 1 / -1; text-align: center; color: var(--color-text-muted); padding: 40px;">Memuat kategori proyek...</p>
                 </div>
             </div>
         </section>
@@ -124,7 +86,63 @@
         </div>
     </footer>
 
+    <!-- Supabase CDN (UMD build) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Konfigurasi Supabase -->
+    <script src="js/supabase.js"></script>
     <!-- JS Utama -->
     <script src="js/main.js"></script>
+
+    <!-- Script Load Featured Categories -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const featuredGrid = document.getElementById('featured-grid');
+
+            async function loadCategories() {
+                const { data, error } = await supabaseClient
+                    .from('project_categories')
+                    .select('*')
+                    .order('created_at', { ascending: true });
+
+                if (error) {
+                    featuredGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: red;">Gagal memuat kategori: ${error.message}</p>`;
+                    return;
+                }
+
+                if (data.length === 0) {
+                    featuredGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--color-text-muted);">Belum ada kategori proyek unggulan.</p>`;
+                    return;
+                }
+
+                let html = '';
+                data.forEach(c => {
+                    html += `
+                    <a href="proyek.html#${c.slug}" class="card card-featured fade-in visible" id="card-${c.slug}" style="opacity: 1; transform: translateY(0);">
+                        <img 
+                            src="${c.gambar_url}" 
+                            alt="Preview ${c.nama_kategori}"
+                            class="card-thumbnail"
+                        >
+                        <div class="card-body">
+                            <div class="card-title">
+                                ${c.nama_kategori}
+                                <svg class="card-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                                </svg>
+                            </div>
+                            <p class="card-desc">
+                                ${c.deskripsi}
+                            </p>
+                        </div>
+                    </a>
+                    `;
+                });
+
+                featuredGrid.innerHTML = html;
+            }
+
+            loadCategories();
+        });
+    </script>
 </body>
 </html>

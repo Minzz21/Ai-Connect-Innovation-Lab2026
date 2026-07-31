@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Masuk ke dashboard AI Connect Innovation Lab.">
+    <title>Masuk — AI CONNECT INOVATION LAB</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/icons/logo.png">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS Utama -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="container">
+            <a href="index.html" class="logo">AI <span>LAB</span></a>
+
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav" id="nav" aria-label="Navigasi utama">
+                <ul class="nav-list">
+                    <li><a href="index.html" class="nav-link">Beranda</a></li>
+                    <li><a href="proyek.html" class="nav-link">Proyek</a></li>
+                    <li><a href="tentang.html" class="nav-link">Tentang</a></li>
+                </ul>
+                <!-- Di halaman login, tombol masuk disembunyikan agar tidak double -->
+                <!-- <a href="login.html" class="btn btn-primary nav-contact">Masuk</a> -->
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <section class="auth-section">
+            <div class="auth-card fade-in visible">
+                <div class="auth-header">
+                    <h1 class="auth-title">Selamat Datang</h1>
+                    <p class="auth-desc">Masuk untuk mengakses dashboard inovasi Anda.</p>
+                </div>
+
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email / Username</label>
+                        <input type="text" id="email" class="form-input" placeholder="Masukkan email atau username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" class="form-input pr-10" placeholder="Masukkan password Anda" required>
+                            <button type="button" class="btn-toggle-password" id="togglePassword" aria-label="Tampilkan password">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="icon-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="icon-eye-off" style="display: none;"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary auth-btn" id="login-btn">
+                        <span>Masuk ke Akun</span>
+                    </button>
+
+                    <div id="auth-message"></div>
+                </form>
+
+                
+            </div>
+        </section>
+    </main>
+
+
+    <!-- Supabase CDN (UMD build) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Konfigurasi Supabase -->
+    <script src="js/supabase.js"></script>
+    <!-- JS Utama -->
+    <script src="js/main.js"></script>
+    
+    <!-- Script Login Khusus -->
+    <script>
+        // Toggle Password Visibility
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const iconEye = document.getElementById('icon-eye');
+        const iconEyeOff = document.getElementById('icon-eye-off');
+
+        togglePasswordBtn.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle icons
+            if (type === 'text') {
+                iconEye.style.display = 'none';
+                iconEyeOff.style.display = 'block';
+            } else {
+                iconEye.style.display = 'block';
+                iconEyeOff.style.display = 'none';
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageEl = document.getElementById('auth-message');
+            const loginBtn = document.getElementById('login-btn');
+            
+            // Tampilan Loading
+            loginBtn.innerHTML = '<span>Memproses...</span>';
+            loginBtn.style.opacity = '0.7';
+            loginBtn.disabled = true;
+            messageEl.textContent = '';
+            messageEl.className = '';
+
+            try {
+                // Autentikasi dengan Supabase (secara default menggunakan email)
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                // Berhasil login
+                messageEl.textContent = 'Login berhasil! Mengarahkan...';
+                messageEl.className = 'msg-success';
+                
+                // Redirect ke halaman dashboard
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html'; 
+                }, 1000);
+
+            } catch (error) {
+                // Gagal login
+                console.error("Login error:", error.message);
+                
+                // Mengubah pesan error Supabase agar lebih ramah dibaca pengguna
+                let errorMsg = error.message;
+                if (errorMsg === 'Invalid login credentials') {
+                    errorMsg = 'Email/Username atau Password salah.';
+                } else if (errorMsg === 'Email not confirmed') {
+                    errorMsg = 'Silakan konfirmasi email Anda terlebih dahulu.';
+                }
+
+                messageEl.textContent = errorMsg;
+                messageEl.className = 'msg-error';
+                
+                // Reset tombol
+                loginBtn.innerHTML = '<span>Masuk ke Akun</span>';
+                loginBtn.style.opacity = '1';
+                loginBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

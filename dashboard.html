@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard Admin AI Connect Innovation Lab.">
+    <title>Dashboard — AI CONNECT INOVATION LAB</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/icons/logo.png">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS Utama -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        
+        <!-- SIDEBAR -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="logo">AI <span>LAB</span></a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="sidebar-link active" data-target="section-beranda">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Beranda
+                </button>
+                <button class="sidebar-link" data-target="section-proyek">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    Proyek
+                </button>
+                <button class="sidebar-link" data-target="section-tentang">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Tentang
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="sidebar-link btn-danger" id="btn-logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Keluar
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="dashboard-main">
+            
+            <header class="dashboard-topbar">
+                <!-- Hamburger for mobile -->
+                <button class="hamburger" id="dash-hamburger" aria-label="Toggle menu" style="display: none;">
+                    <span></span><span></span><span></span>
+                </button>
+                
+                <div class="dashboard-title" id="topbar-title">Beranda Dashboard</div>
+                
+                <div class="user-profile">
+                    <span class="badge">Admin</span>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                
+                <!-- SECTION: BERANDA -->
+                <section id="section-beranda" class="dashboard-section active">
+                    <h2 class="section-heading">Ringkasan Aktivitas</h2>
+                    <div class="grid-3col">
+                        <div class="dash-card">
+                            <div class="dash-card-title">Total Proyek AI</div>
+                            <div class="dash-card-value" id="stat-total-projects">0</div>
+                        </div>
+                        <div class="dash-card">
+                            <div class="dash-card-title">Total Anggota Tim</div>
+                            <div class="dash-card-value" id="stat-total-members">0</div>
+                        </div>
+                        <div class="dash-card">
+                            <div class="dash-card-title">Status Server</div>
+                            <div class="dash-card-value" style="color: #10B981;">Online</div>
+                        </div>
+                    </div>
+
+                    <!-- KATEGORI PROYEK -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-2xl); margin-bottom: var(--space-xl);">
+                        <h2 class="section-heading" style="margin-bottom: 0;">Daftar Proyek</h2>
+                        <button class="btn btn-primary" id="btn-add-category">+ Tambah Kategori</button>
+                    </div>
+                    
+                    <div class="table-container" style="background: var(--color-surface); border-radius: 8px; border: 1px solid var(--color-border); overflow: hidden;">
+                        <table class="dash-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+                            <thead style="background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--color-border);">
+                                <tr>
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Thumbnail</th>
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Nama Kategori</th>
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Slug</th>
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categories-tbody">
+                                <tr><td colspan="4" style="text-align:center; padding: 20px;">Memuat data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- SECTION: PROYEK -->
+                <section id="section-proyek" class="dashboard-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xl);">
+                        <h2 class="section-heading" style="margin-bottom: 0;">Manajemen Proyek</h2>
+                        <button class="btn btn-primary" id="btn-add-project">+ Tambah Proyek</button>
+                    </div>
+                    <div class="table-container" style="background: var(--color-surface); border-radius: 8px; border: 1px solid var(--color-border); overflow: hidden;">
+                        <table class="dash-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+                            <thead style="background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--color-border);">
+                                <tr>
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Thumbnail</th>
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Nama Proyek</th>
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Kategori</th>
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="projects-tbody">
+                                <tr><td colspan="4" style="text-align:center; padding: 20px;">Memuat data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- SECTION: TENTANG -->
+                <section id="section-tentang" class="dashboard-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xl);">
+                        <h2 class="section-heading" style="margin-bottom: 0;">Manajemen Tim & Profil</h2>
+                        <button class="btn btn-primary" id="btn-add-member">+ Tambah Anggota</button>
+                    </div>
+
+                    <div class="dash-card">
+                        <table style="width: 100%; text-align: left; border-collapse: collapse;" id="members-table">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Foto</th>
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Nama Lengkap</th>
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Tim</th>
+                                    <th style="padding: 12px; font-size: var(--fs-small); color: var(--color-text-muted);">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="members-tbody">
+                                <tr><td colspan="4" style="text-align:center; padding: 20px;">Memuat data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Add/Edit Member -->
+    <div id="modal-member" class="modal-overlay" style="z-index: 200;">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" id="close-modal-member">&times;</button>
+            <div class="modal-body">
+                <h3 class="auth-title" id="modal-member-title" style="margin-bottom: var(--space-lg);">Tambah Anggota Baru</h3>
+                <form id="form-add-member">
+                    <input type="hidden" id="mem-id">
+                    <div class="form-group">
+                        <label class="form-label">Nama Lengkap</label>
+                        <input type="text" id="mem-nama" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nama Panggilan (Maks 10 huruf)</label>
+                        <input type="text" id="mem-panggilan" class="form-input" maxlength="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nama Tim / Proyek</label>
+                        <input type="text" id="mem-tim" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Asal Universitas</label>
+                        <input type="text" id="mem-univ" class="form-input" value="Universitas Negeri Makassar" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jurusan</label>
+                        <input type="text" id="mem-jurusan" class="form-input" value="Teknik Informatika dan komputer" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Foto Anggota</label>
+                        <input type="file" id="mem-foto" accept="image/*" class="form-input">
+                        <small style="color: var(--color-text-muted); font-size: 12px; margin-top: 4px; display: block;">*Biarkan kosong jika tidak ingin mengubah foto</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Link Instagram</label>
+                        <input type="url" id="mem-ig" class="form-input" placeholder="Opsional">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Link LinkedIn</label>
+                        <input type="url" id="mem-linkedin" class="form-input" placeholder="Opsional">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btn-save-member" style="width: 100%; margin-top: 10px;">Simpan Data</button>
+                    <div id="member-msg" style="margin-top: 15px; font-size: 14px; text-align: center; font-weight: 600;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Add/Edit Kategori Proyek -->
+    <div id="modal-category" class="modal-overlay" style="z-index: 200;">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" id="close-modal-category">&times;</button>
+            <div class="modal-body">
+                <h3 class="auth-title" id="modal-category-title" style="margin-bottom: var(--space-lg);">Tambah Kategori Proyek</h3>
+                <form id="form-add-category">
+                    <input type="hidden" id="cat-id">
+                    <div class="form-group">
+                        <label class="form-label">Nama Kategori</label>
+                        <input type="text" id="cat-nama" class="form-input" placeholder="Contoh: Apilogy Use Case" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Slug (untuk URL link)</label>
+                        <input type="text" id="cat-slug" class="form-input" placeholder="Contoh: apilogy-use-case" required>
+                        <small style="color: var(--color-text-muted); font-size: 12px; margin-top: 4px; display: block;">Gunakan huruf kecil dan strip tanpa spasi.</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea id="cat-deskripsi" class="form-input" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Gambar Thumbnail</label>
+                        <input type="file" id="cat-foto" accept="image/*" class="form-input">
+                        <small style="color: var(--color-text-muted); font-size: 12px; margin-top: 4px; display: block;">*Biarkan kosong jika tidak ingin mengubah foto</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btn-save-category" style="width: 100%; margin-top: 10px;">Simpan Data</button>
+                    <div id="category-msg" style="margin-top: 15px; font-size: 14px; text-align: center; font-weight: 600;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Add/Edit Proyek Asli -->
+    <div id="modal-project" class="modal-overlay" style="z-index: 200;">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" id="close-modal-project">&times;</button>
+            <div class="modal-body">
+                <h3 class="auth-title" id="modal-project-title" style="margin-bottom: var(--space-lg);">Tambah Proyek Utama</h3>
+                <form id="form-add-project">
+                    <input type="hidden" id="proj-id">
+                    
+                    <div class="form-group">
+                        <label class="form-label">Kategori Proyek</label>
+                        <select id="proj-category" class="form-input" required>
+                            <option value="">-- Pilih Kategori --</option>
+                            <!-- Diisi oleh JavaScript -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Nama Proyek</label>
+                        <input type="text" id="proj-nama" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea id="proj-deskripsi" class="form-input" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Anggota Tim (Opsional)</label>
+                        <input type="text" id="proj-tim" class="form-input" placeholder="Contoh: Mustamin, John Doe">
+                        <small style="color: var(--color-text-muted); font-size: 12px; margin-top: 4px; display: block;">Kosongkan jika tidak ada/bukan perkelompok.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Link Demo / URL Proyek</label>
+                        <input type="url" id="proj-link" class="form-input" placeholder="https://..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Gambar Thumbnail</label>
+                        <input type="file" id="proj-foto" accept="image/*" class="form-input">
+                        <small style="color: var(--color-text-muted); font-size: 12px; margin-top: 4px; display: block;">*Biarkan kosong jika tidak ingin mengubah foto</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="btn-save-project" style="width: 100%; margin-top: 10px;">Simpan Data</button>
+                    <div id="project-msg" style="margin-top: 15px; font-size: 14px; text-align: center; font-weight: 600;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Supabase CDN (UMD build) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Konfigurasi Supabase -->
+    <script src="js/supabase.js"></script>
+    
+    <!-- Script Dashboard -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            
+            // 1. Cek sesi login saat halaman dimuat
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            
+            if (error || !session) {
+                // Jika belum login, arahkan kembali ke halaman login
+                alert("Sesi tidak valid atau Anda belum login.");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Tab Switching Logic
+            const links = document.querySelectorAll('.sidebar-nav .sidebar-link');
+            const sections = document.querySelectorAll('.dashboard-section');
+            const topbarTitle = document.getElementById('topbar-title');
+
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    // Hapus active dari semua link
+                    links.forEach(l => l.classList.remove('active'));
+                    // Tambahkan active ke link yang diklik
+                    link.classList.add('active');
+
+                    // Ganti judul topbar
+                    topbarTitle.textContent = link.textContent.trim() + " Dashboard";
+
+                    // Sembunyikan semua section
+                    sections.forEach(sec => sec.classList.remove('active'));
+                    
+                    // Tampilkan section target
+                    const targetId = link.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                    
+                    // Tutup sidebar di mobile jika terbuka
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('open');
+                    }
+                });
+            });
+
+            // 3. Logout Logic
+            const btnLogout = document.getElementById('btn-logout');
+            btnLogout.addEventListener('click', async () => {
+                const konfirmasi = confirm("Apakah Anda yakin ingin keluar?");
+                if(konfirmasi) {
+                    btnLogout.innerHTML = 'Memproses...';
+                    await supabaseClient.auth.signOut();
+                    window.location.href = 'index.html'; // Kembali ke beranda setelah logout
+                }
+            });
+
+            // 4. Mobile Menu Toggle
+            const dashHamburger = document.getElementById('dash-hamburger');
+            const sidebar = document.getElementById('sidebar');
+            
+            // Tampilkan hamburger button di mobile
+            if (window.innerWidth <= 768) {
+                dashHamburger.style.display = 'flex';
+            }
+            
+            window.addEventListener('resize', () => {
+                if (window.innerWidth <= 768) {
+                    dashHamburger.style.display = 'flex';
+                } else {
+                    dashHamburger.style.display = 'none';
+                    sidebar.classList.remove('open');
+                }
+            });
+
+            dashHamburger.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+
+            // ==========================================
+            // CRUD KATEGORI PROYEK (BERANDA)
+            // ==========================================
+            const categoriesTbody = document.getElementById('categories-tbody');
+            const modalCategory = document.getElementById('modal-category');
+            const btnAddCategory = document.getElementById('btn-add-category');
+            const closeModalCategory = document.getElementById('close-modal-category');
+            const formAddCategory = document.getElementById('form-add-category');
+            const categoryMsg = document.getElementById('category-msg');
+            const btnSaveCategory = document.getElementById('btn-save-category');
+
+            let currentCategories = []; // State
+
+            // 1. Fetch Data Kategori
+            async function fetchCategories() {
+                const { data, error } = await supabaseClient
+                    .from('project_categories')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    categoriesTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Gagal memuat data: ${error.message}</td></tr>`;
+                    return;
+                }
+
+                currentCategories = data;
+
+                if (data.length === 0) {
+                    categoriesTbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada data kategori proyek.</td></tr>`;
+                    return;
+                }
+
+                let html = '';
+                data.forEach(c => {
+                    html += `
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td style="padding: 12px;"><img src="${c.gambar_url}" alt="Thumbnail" style="width: 80px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
+                            <td style="padding: 12px; font-weight: 500;">${c.nama_kategori}</td>
+                            <td style="padding: 12px; font-family: monospace; color: var(--color-text-muted);">${c.slug}</td>
+                            <td style="padding: 12px;">
+                                <button style="background: none; border: none; cursor: pointer; font-size: 14px; color: var(--color-primary); margin-right: 12px; display: inline-flex; align-items: center;" onclick="editCategory('${c.id}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Edit
+                                </button>
+                                <button class="btn-danger" style="background: none; border: none; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center;" onclick="deleteCategory('${c.id}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> Hapus
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                categoriesTbody.innerHTML = html;
+            }
+
+            fetchCategories();
+
+            // 2. Modal Logic Kategori
+            btnAddCategory.addEventListener('click', () => {
+                document.getElementById('modal-category-title').textContent = 'Tambah Kategori Proyek';
+                document.getElementById('cat-id').value = '';
+                formAddCategory.reset();
+                modalCategory.classList.add('active');
+            });
+            
+            closeModalCategory.addEventListener('click', () => {
+                modalCategory.classList.remove('active');
+                formAddCategory.reset();
+                categoryMsg.textContent = '';
+            });
+
+            // 3. Edit Kategori
+            window.editCategory = function(id) {
+                const cat = currentCategories.find(c => c.id === id);
+                if (!cat) return;
+
+                document.getElementById('modal-category-title').textContent = 'Edit Kategori Proyek';
+                document.getElementById('cat-id').value = cat.id;
+                document.getElementById('cat-nama').value = cat.nama_kategori;
+                document.getElementById('cat-slug').value = cat.slug;
+                document.getElementById('cat-deskripsi').value = cat.deskripsi || '';
+                
+                modalCategory.classList.add('active');
+            }
+
+            // 4. Submit Kategori
+            formAddCategory.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                btnSaveCategory.innerHTML = 'Menyimpan...';
+                btnSaveCategory.disabled = true;
+                categoryMsg.textContent = '';
+                categoryMsg.className = '';
+
+                try {
+                    const editId = document.getElementById('cat-id').value;
+                    const isEdit = editId !== '';
+                    let finalPublicUrl = null;
+
+                    const fileInput = document.getElementById('cat-foto');
+                    const file = fileInput.files[0];
+                    
+                    if (file) {
+                        const fileExt = file.name.split('.').pop();
+                        const fileName = `cat_${Math.random()}.${fileExt}`;
+                        const filePath = `categories/${fileName}`; // simpan dalam folder categories di bucket projects
+
+                        const { error: uploadError } = await supabaseClient.storage
+                            .from('projects')
+                            .upload(filePath, file);
+
+                        if (uploadError) throw uploadError;
+
+                        const { data: publicUrlData } = supabaseClient.storage
+                            .from('projects')
+                            .getPublicUrl(filePath);
+
+                        finalPublicUrl = publicUrlData.publicUrl;
+                    } else {
+                        if (!isEdit) {
+                            throw new Error("Gambar thumbnail wajib dipilih");
+                        }
+                    }
+
+                    const payload = {
+                        nama_kategori: document.getElementById('cat-nama').value,
+                        slug: document.getElementById('cat-slug').value,
+                        deskripsi: document.getElementById('cat-deskripsi').value
+                    };
+
+                    if (finalPublicUrl) {
+                        payload.gambar_url = finalPublicUrl;
+                    }
+
+                    if (isEdit) {
+                        const { error: updateError } = await supabaseClient
+                            .from('project_categories')
+                            .update(payload)
+                            .eq('id', editId);
+                            
+                        if (updateError) throw updateError;
+                        categoryMsg.textContent = 'Kategori berhasil diubah!';
+                    } else {
+                        const { error: insertError } = await supabaseClient
+                            .from('project_categories')
+                            .insert([payload]);
+
+                        if (insertError) throw insertError;
+                        categoryMsg.textContent = 'Kategori berhasil ditambahkan!';
+                    }
+
+                    categoryMsg.style.color = '#10B981';
+                    
+                    fetchCategories();
+                    setTimeout(() => {
+                        modalCategory.classList.remove('active');
+                        formAddCategory.reset();
+                        btnSaveCategory.innerHTML = 'Simpan Data';
+                        btnSaveCategory.disabled = false;
+                    }, 1000);
+
+                } catch (err) {
+                    categoryMsg.textContent = 'Error: ' + err.message;
+                    categoryMsg.style.color = 'red';
+                    btnSaveCategory.innerHTML = 'Simpan Data';
+                    btnSaveCategory.disabled = false;
+                }
+            });
+
+            // 5. Delete Kategori
+            window.deleteCategory = async function(id) {
+                if(confirm("Hapus kategori ini? Data yang terhubung juga mungkin terpengaruh.")) {
+                    const { error } = await supabaseClient.from('project_categories').delete().eq('id', id);
+                    if(error) alert("Gagal menghapus: " + error.message);
+                    else fetchCategories();
+                }
+            }
+            // ==========================================
+            // CRUD PROYEK UTAMA (TAB PROYEK)
+            // ==========================================
+            const projectsTbody = document.getElementById('projects-tbody');
+            const modalProject = document.getElementById('modal-project');
+            const btnAddProject = document.getElementById('btn-add-project');
+            const closeModalProject = document.getElementById('close-modal-project');
+            const formAddProject = document.getElementById('form-add-project');
+            const projectMsg = document.getElementById('project-msg');
+            const btnSaveProject = document.getElementById('btn-save-project');
+            const projCategoryDropdown = document.getElementById('proj-category');
+
+            let currentProjects = [];
+
+            // 1. Fetch Data Proyek Utama
+            async function fetchProjects() {
+                // Gunakan relasi untuk mengambil nama kategori
+                const { data, error } = await supabaseClient
+                    .from('projects')
+                    .select(`
+                        *,
+                        project_categories (
+                            nama_kategori
+                        )
+                    `)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    projectsTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Gagal memuat data: ${error.message}</td></tr>`;
+                    return;
+                }
+
+                currentProjects = data;
+                
+                // Update statistik ringkasan
+                const statProjects = document.getElementById('stat-total-projects');
+                if (statProjects) {
+                    statProjects.textContent = data.length;
+                }
+
+                if (data.length === 0) {
+                    projectsTbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada data proyek.</td></tr>`;
+                    return;
+                }
+
+                let html = '';
+                data.forEach(p => {
+                    const namaKategori = p.project_categories ? p.project_categories.nama_kategori : 'Tidak ada kategori';
+                    
+                    html += `
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td style="padding: 12px;"><img src="${p.gambar_url}" alt="Thumbnail" style="width: 80px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
+                            <td style="padding: 12px; font-weight: 500;">${p.nama_proyek}</td>
+                            <td style="padding: 12px; font-size: 13px;">${namaKategori}</td>
+                            <td style="padding: 12px;">
+                                <button style="background: none; border: none; cursor: pointer; font-size: 14px; color: var(--color-primary); margin-right: 12px; display: inline-flex; align-items: center;" onclick="editProject('${p.id}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Edit
+                                </button>
+                                <button class="btn-danger" style="background: none; border: none; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center;" onclick="deleteProject('${p.id}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> Hapus
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                projectsTbody.innerHTML = html;
+            }
+
+            // Fungsi untuk mengisi dropdown kategori di modal form
+            function populateCategoryDropdown() {
+                let options = '<option value="">-- Pilih Kategori --</option>';
+                currentCategories.forEach(c => {
+                    options += `<option value="${c.id}">${c.nama_kategori}</option>`;
+                });
+                projCategoryDropdown.innerHTML = options;
+            }
+
+            fetchProjects();
+
+            // 2. Modal Logic Proyek
+            btnAddProject.addEventListener('click', () => {
+                populateCategoryDropdown(); // isi dropdown sebelum ditampilkan
+                document.getElementById('modal-project-title').textContent = 'Tambah Proyek Utama';
+                document.getElementById('proj-id').value = '';
+                formAddProject.reset();
+                modalProject.classList.add('active');
+            });
+            
+            closeModalProject.addEventListener('click', () => {
+                modalProject.classList.remove('active');
+                formAddProject.reset();
+                projectMsg.textContent = '';
+            });
+
+            // 3. Edit Proyek
+            window.editProject = function(id) {
+                const proj = currentProjects.find(p => p.id === id);
+                if (!proj) return;
+
+                populateCategoryDropdown(); // Pastikan opsi ada
+
+                document.getElementById('modal-project-title').textContent = 'Edit Proyek Utama';
+                document.getElementById('proj-id').value = proj.id;
+                document.getElementById('proj-category').value = proj.category_id;
+                document.getElementById('proj-nama').value = proj.nama_proyek;
+                document.getElementById('proj-deskripsi').value = proj.deskripsi || '';
+                document.getElementById('proj-tim').value = proj.anggota_tim || '';
+                document.getElementById('proj-link').value = proj.link_url || '';
+                
+                modalProject.classList.add('active');
+            }
+
+            // 4. Submit Proyek
+            formAddProject.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                btnSaveProject.innerHTML = 'Menyimpan...';
+                btnSaveProject.disabled = true;
+                projectMsg.textContent = '';
+                projectMsg.className = '';
+
+                try {
+                    const editId = document.getElementById('proj-id').value;
+                    const isEdit = editId !== '';
+                    let finalPublicUrl = null;
+
+                    const fileInput = document.getElementById('proj-foto');
+                    const file = fileInput.files[0];
+                    
+                    if (file) {
+                        const fileExt = file.name.split('.').pop();
+                        const fileName = `proj_${Math.random()}.${fileExt}`;
+                        const filePath = `subprojects/${fileName}`; 
+
+                        const { error: uploadError } = await supabaseClient.storage
+                            .from('projects')
+                            .upload(filePath, file);
+
+                        if (uploadError) throw uploadError;
+
+                        const { data: publicUrlData } = supabaseClient.storage
+                            .from('projects')
+                            .getPublicUrl(filePath);
+
+                        finalPublicUrl = publicUrlData.publicUrl;
+                    } else {
+                        if (!isEdit) {
+                            throw new Error("Gambar thumbnail wajib dipilih");
+                        }
+                    }
+
+                    const payload = {
+                        category_id: document.getElementById('proj-category').value,
+                        nama_proyek: document.getElementById('proj-nama').value,
+                        deskripsi: document.getElementById('proj-deskripsi').value,
+                        anggota_tim: document.getElementById('proj-tim').value,
+                        link_url: document.getElementById('proj-link').value
+                    };
+
+                    if (finalPublicUrl) {
+                        payload.gambar_url = finalPublicUrl;
+                    }
+
+                    if (isEdit) {
+                        const { error: updateError } = await supabaseClient
+                            .from('projects')
+                            .update(payload)
+                            .eq('id', editId);
+                            
+                        if (updateError) throw updateError;
+                        projectMsg.textContent = 'Proyek berhasil diubah!';
+                    } else {
+                        const { error: insertError } = await supabaseClient
+                            .from('projects')
+                            .insert([payload]);
+
+                        if (insertError) throw insertError;
+                        projectMsg.textContent = 'Proyek berhasil ditambahkan!';
+                    }
+
+                    projectMsg.style.color = '#10B981';
+                    
+                    fetchProjects();
+                    setTimeout(() => {
+                        modalProject.classList.remove('active');
+                        formAddProject.reset();
+                        btnSaveProject.innerHTML = 'Simpan Data';
+                        btnSaveProject.disabled = false;
+                    }, 1000);
+
+                } catch (err) {
+                    projectMsg.textContent = 'Error: ' + err.message;
+                    projectMsg.style.color = 'red';
+                    btnSaveProject.innerHTML = 'Simpan Data';
+                    btnSaveProject.disabled = false;
+                }
+            });
+
+            // 5. Delete Proyek
+            window.deleteProject = async function(id) {
+                if(confirm("Hapus proyek ini secara permanen?")) {
+                    const { error } = await supabaseClient.from('projects').delete().eq('id', id);
+                    if(error) alert("Gagal menghapus: " + error.message);
+                    else fetchProjects();
+                }
+            }
+            // ==========================================
+            // CRUD MEMBER TIM (SUPABASE)
+            // ==========================================
+            const membersTbody = document.getElementById('members-tbody');
+            const modalMember = document.getElementById('modal-member');
+            const btnAddMember = document.getElementById('btn-add-member');
+            const closeModalMember = document.getElementById('close-modal-member');
+            const formAddMember = document.getElementById('form-add-member');
+            const memberMsg = document.getElementById('member-msg');
+            const btnSaveMember = document.getElementById('btn-save-member');
+
+            let currentMembers = []; // Untuk menyimpan state data saat ini
+
+            // 1. Fetch Data
+            async function fetchMembers() {
+                const { data, error } = await supabaseClient
+                    .from('members')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    membersTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Gagal memuat data: ${error.message}</td></tr>`;
+                    return;
+                }
+
+                currentMembers = data; // Simpan ke state global
+                
+                // Update statistik ringkasan
+                const statMembers = document.getElementById('stat-total-members');
+                if (statMembers) {
+                    statMembers.textContent = data.length;
+                }
+
+                if (data.length === 0) {
+                    membersTbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada anggota tim.</td></tr>`;
+                    return;
+                }
+
+                let html = '';
+                data.forEach(m => {
+                    html += `
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td style="padding: 12px;"><img src="${m.foto_url}" alt="Foto" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"></td>
+                            <td style="padding: 12px; font-weight: 500;">${m.nama}</td>
+                            <td style="padding: 12px;">${m.nama_tim}</td>
+                            <td style="padding: 12px;">
+                                <button style="background: none; border: none; cursor: pointer; font-size: 14px; color: var(--color-primary); margin-right: 12px; display: inline-flex; align-items: center;" onclick="editMember('${m.id}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Edit
+                                </button>
+                                <button class="btn-danger" style="background: none; border: none; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center;" onclick="deleteMember('${m.id}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> Hapus
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                membersTbody.innerHTML = html;
+            }
+
+            // Load saat halaman pertama dibuka
+            fetchMembers();
+
+            // 2. Modal Logic
+            btnAddMember.addEventListener('click', () => {
+                document.getElementById('modal-member-title').textContent = 'Tambah Anggota Baru';
+                document.getElementById('mem-id').value = '';
+                formAddMember.reset();
+                modalMember.classList.add('active');
+            });
+            
+            closeModalMember.addEventListener('click', () => {
+                modalMember.classList.remove('active');
+                formAddMember.reset();
+                memberMsg.textContent = '';
+            });
+
+            // 3. Edit Data (Fungsi Global)
+            window.editMember = function(id) {
+                const member = currentMembers.find(m => m.id === id);
+                if (!member) return;
+
+                document.getElementById('modal-member-title').textContent = 'Edit Anggota';
+                document.getElementById('mem-id').value = member.id;
+                document.getElementById('mem-nama').value = member.nama;
+                document.getElementById('mem-panggilan').value = member.nama_panggilan || '';
+                document.getElementById('mem-tim').value = member.nama_tim;
+                document.getElementById('mem-univ').value = member.asal_universitas;
+                document.getElementById('mem-jurusan').value = member.jurusan;
+                document.getElementById('mem-ig').value = member.link_instagram || '';
+                document.getElementById('mem-linkedin').value = member.link_linkedin || '';
+                
+                // Buka modal
+                modalMember.classList.add('active');
+            }
+
+            // 4. Add / Update Data (Submit)
+            formAddMember.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                btnSaveMember.innerHTML = 'Menyimpan...';
+                btnSaveMember.disabled = true;
+                memberMsg.textContent = '';
+                memberMsg.className = '';
+
+                try {
+                    const editId = document.getElementById('mem-id').value;
+                    const isEdit = editId !== '';
+                    
+                    let finalPublicUrl = null;
+
+                    // Ambil file foto jika diisi
+                    const fileInput = document.getElementById('mem-foto');
+                    const file = fileInput.files[0];
+                    
+                    if (file) {
+                        // Bikin nama file unik
+                        const fileExt = file.name.split('.').pop();
+                        const fileName = `${Math.random()}.${fileExt}`;
+                        const filePath = `avatars/${fileName}`;
+
+                        // Upload ke Storage
+                        const { error: uploadError } = await supabaseClient.storage
+                            .from('avatars')
+                            .upload(filePath, file);
+
+                        if (uploadError) throw uploadError;
+
+                        // Dapatkan URL Publik
+                        const { data: publicUrlData } = supabaseClient.storage
+                            .from('avatars')
+                            .getPublicUrl(filePath);
+
+                        finalPublicUrl = publicUrlData.publicUrl;
+                    } else {
+                        if (!isEdit) {
+                            throw new Error("Foto wajib dipilih untuk anggota baru");
+                        }
+                    }
+
+                    const payload = {
+                        nama: document.getElementById('mem-nama').value,
+                        nama_panggilan: document.getElementById('mem-panggilan').value,
+                        nama_tim: document.getElementById('mem-tim').value,
+                        asal_universitas: document.getElementById('mem-univ').value,
+                        jurusan: document.getElementById('mem-jurusan').value,
+                        link_instagram: document.getElementById('mem-ig').value,
+                        link_linkedin: document.getElementById('mem-linkedin').value
+                    };
+
+                    // Jika ada foto baru yang diupload
+                    if (finalPublicUrl) {
+                        payload.foto_url = finalPublicUrl;
+                    }
+
+                    if (isEdit) {
+                        // Update existing member
+                        const { error: updateError } = await supabaseClient
+                            .from('members')
+                            .update(payload)
+                            .eq('id', editId);
+                            
+                        if (updateError) throw updateError;
+                        memberMsg.textContent = 'Berhasil diubah!';
+                    } else {
+                        // Insert new member
+                        const { error: insertError } = await supabaseClient
+                            .from('members')
+                            .insert([payload]);
+
+                        if (insertError) throw insertError;
+                        memberMsg.textContent = 'Berhasil ditambahkan!';
+                    }
+
+                    memberMsg.style.color = '#10B981';
+                    
+                    // Refresh data & tutup modal
+                    fetchMembers();
+                    setTimeout(() => {
+                        modalMember.classList.remove('active');
+                        formAddMember.reset();
+                        btnSaveMember.innerHTML = 'Simpan Data';
+                        btnSaveMember.disabled = false;
+                    }, 1000);
+
+                } catch (err) {
+                    memberMsg.textContent = 'Error: ' + err.message;
+                    memberMsg.style.color = 'red';
+                    btnSaveMember.innerHTML = 'Simpan Data';
+                    btnSaveMember.disabled = false;
+                }
+            });
+
+            // 5. Delete Logic
+            window.deleteMember = async function(id) {
+                if(confirm("Hapus anggota ini?")) {
+                    const { error } = await supabaseClient.from('members').delete().eq('id', id);
+                    if(error) alert("Gagal menghapus: " + error.message);
+                    else fetchMembers();
+                }
+            }
+
+        });
+    </script>
+</body>
+</html>
