@@ -772,7 +772,7 @@
                 const { data, error } = await supabaseClient
                     .from('members')
                     .select('*')
-                    .order('created_at', { ascending: false });
+                    .order('created_at', { ascending: true });
 
                 if (error) {
                     membersTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Gagal memuat data: ${error.message}</td></tr>`;
@@ -790,17 +790,25 @@
                 if (data.length === 0) {
                     membersTbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada anggota tim.</td></tr>`;
                     return;
-                }
-
-                let html = '';
-                data.forEach(m => {
+                }                let html = '';
+                data.forEach((m, index) => {
+                    const isFirst = index === 0;
+                    const isLast = index === data.length - 1;
                     html += `
                         <tr style="border-bottom: 1px solid var(--color-border);">
                             <td style="padding: 12px;"><img src="${m.foto_url}" alt="Foto" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"></td>
                             <td style="padding: 12px; font-weight: 500;">${m.nama}</td>
                             <td style="padding: 12px;">${m.nama_tim}</td>
-                            <td style="padding: 12px;">
-                                <button style="background: none; border: none; cursor: pointer; font-size: 14px; color: var(--color-primary); margin-right: 12px; display: inline-flex; align-items: center;" onclick="editMember('${m.id}')">
+                            <td style="padding: 12px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px;">
+                                <div style="display: flex; gap: 4px;">
+                                    <button style="background: rgba(255,255,255,0.05); border: 1px solid var(--color-border); border-radius: 4px; padding: 4px; cursor: ${isFirst ? 'not-allowed' : 'pointer'}; opacity: ${isFirst ? '0.3' : '1'}; color: var(--color-text);" onclick="moveMemberUp(${index})" ${isFirst ? 'disabled' : ''} title="Geser ke atas">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                    </button>
+                                    <button style="background: rgba(255,255,255,0.05); border: 1px solid var(--color-border); border-radius: 4px; padding: 4px; cursor: ${isLast ? 'not-allowed' : 'pointer'}; opacity: ${isLast ? '0.3' : '1'}; color: var(--color-text);" onclick="moveMemberDown(${index})" ${isLast ? 'disabled' : ''} title="Geser ke bawah">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                    </button>
+                                </div>
+                                <button style="background: none; border: none; cursor: pointer; font-size: 14px; color: var(--color-primary); display: inline-flex; align-items: center;" onclick="editMember('${m.id}')">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Edit
                                 </button>
                                 <button class="btn-danger" style="background: none; border: none; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center;" onclick="deleteMember('${m.id}')">
@@ -811,6 +819,50 @@
                     `;
                 });
                 membersTbody.innerHTML = html;
+            }
+
+            // Fungsi geser ke atas
+            window.moveMemberUp = async function(index) {
+                if (index <= 0) return;
+                const current = currentMembers[index];
+                const above = currentMembers[index - 1];
+                
+                // Tampilkan loading di baris
+                membersTbody.style.opacity = '0.5';
+                
+                try {
+                    await Promise.all([
+                        supabaseClient.from('members').update({ created_at: above.created_at }).eq('id', current.id),
+                        supabaseClient.from('members').update({ created_at: current.created_at }).eq('id', above.id)
+                    ]);
+                    fetchMembers();
+                } catch (e) {
+                    alert('Gagal menggeser urutan: ' + e.message);
+                } finally {
+                    membersTbody.style.opacity = '1';
+                }
+            }
+
+            // Fungsi geser ke bawah
+            window.moveMemberDown = async function(index) {
+                if (index >= currentMembers.length - 1) return;
+                const current = currentMembers[index];
+                const below = currentMembers[index + 1];
+                
+                // Tampilkan loading di baris
+                membersTbody.style.opacity = '0.5';
+                
+                try {
+                    await Promise.all([
+                        supabaseClient.from('members').update({ created_at: below.created_at }).eq('id', current.id),
+                        supabaseClient.from('members').update({ created_at: current.created_at }).eq('id', below.id)
+                    ]);
+                    fetchMembers();
+                } catch (e) {
+                    alert('Gagal menggeser urutan: ' + e.message);
+                } finally {
+                    membersTbody.style.opacity = '1';
+                }
             }
 
             // Load saat halaman pertama dibuka
