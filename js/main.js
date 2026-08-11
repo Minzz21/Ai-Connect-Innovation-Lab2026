@@ -10,21 +10,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (hamburger && nav) {
         const header = document.querySelector('.header');
+
+        // Create backdrop element for mobile drawer
+        const backdrop = document.createElement('div');
+        backdrop.classList.add('nav-backdrop');
+        document.body.appendChild(backdrop);
+
+        function openMenu() {
+            hamburger.classList.add('open');
+            nav.classList.add('open');
+            backdrop.classList.add('active');
+            if(header) header.classList.add('menu-open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            hamburger.classList.remove('open');
+            nav.classList.remove('open');
+            backdrop.classList.remove('active');
+            if(header) header.classList.remove('menu-open');
+            document.body.style.overflow = '';
+        }
+
         hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('open');
-            nav.classList.toggle('open');
-            if(header) header.classList.toggle('menu-open');
-            document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
+            if (nav.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
         });
+
+        // Close drawer when backdrop is tapped
+        backdrop.addEventListener('click', closeMenu);
 
         // Tutup menu saat link di-klik (mobile)
         nav.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('open');
-                nav.classList.remove('open');
-                if(header) header.classList.remove('menu-open');
-                document.body.style.overflow = '';
-            });
+            link.addEventListener('click', closeMenu);
         });
     }
 

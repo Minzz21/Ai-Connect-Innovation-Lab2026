@@ -336,6 +336,7 @@
                     // Tutup sidebar di mobile jika terbuka
                     if (window.innerWidth <= 768) {
                         sidebar.classList.remove('open');
+                        if (typeof closeDashSidebar === 'function') closeDashSidebar();
                     }
                 });
             });
@@ -355,23 +356,39 @@
             const dashHamburger = document.getElementById('dash-hamburger');
             const sidebar = document.getElementById('sidebar');
             
-            // Tampilkan hamburger button di mobile
-            if (window.innerWidth <= 768) {
-                dashHamburger.style.display = 'flex';
+            // Create backdrop for dashboard sidebar
+            const dashBackdrop = document.createElement('div');
+            dashBackdrop.classList.add('dash-backdrop');
+            document.body.appendChild(dashBackdrop);
+
+            function openDashSidebar() {
+                sidebar.classList.add('open');
+                dashBackdrop.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDashSidebar() {
+                sidebar.classList.remove('open');
+                dashBackdrop.classList.remove('active');
+                document.body.style.overflow = '';
             }
             
             window.addEventListener('resize', () => {
-                if (window.innerWidth <= 768) {
-                    dashHamburger.style.display = 'flex';
-                } else {
-                    dashHamburger.style.display = 'none';
-                    sidebar.classList.remove('open');
+                if (window.innerWidth > 768) {
+                    closeDashSidebar();
                 }
             });
 
             dashHamburger.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
+                if (sidebar.classList.contains('open')) {
+                    closeDashSidebar();
+                } else {
+                    openDashSidebar();
+                }
             });
+
+            // Close sidebar when backdrop is tapped
+            dashBackdrop.addEventListener('click', closeDashSidebar);
 
             // ==========================================
             // CRUD KATEGORI PROYEK (BERANDA)
